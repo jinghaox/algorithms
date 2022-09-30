@@ -13,7 +13,7 @@ def coin_change(coins, amount):
     # or if a>b, min(1+dp[target-c2], b)
     dp = (amount+1)*[float('inf')]
     dp[0] = 0
-    for t in range(2, amount+1):
+    for t in range(1, amount+1):  # we used 2 before, but we can start from 1
         for c in coins:
             if t-c >= 0:
                 # dp[t]'s init value is 'inf', and we are taking min here, so it's ok
