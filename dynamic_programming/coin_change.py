@@ -1,16 +1,25 @@
-from re import I
-
+from typing import List
+from math import inf
 
 def coin_change(coins, amount):
-    # dp[target] = min(1 + dp[target-c1],
-    #                  1 + dp[target-c2],
-    #                  1 + dp[target-c3])
-    # how to do it?
-    # dp[target] = min(1 + dp[target-c1], dp[target])
-    # assume 1+dp[target-c1] is a, dp[taget] is b
-    # then min(a,b), if a<b, is a, ow, is b
-    # then if a<b, min(1+dp[target-c2], a)
-    # or if a>b, min(1+dp[target-c2], b)
+    """ Dynamic programming
+
+    dp[target] = min(1 + dp[target-c1],
+                     1 + dp[target-c2],
+                     1 + dp[target-c3])
+    how to do it?
+    dp[target] = min(1 + dp[target-c1], dp[target])
+    assume 1+dp[target-c1] is a, dp[taget] is b
+    then min(a,b), if a<b, is a, ow, is b
+    then if a<b, min(1+dp[target-c2], a)
+    or if a>b, min(1+dp[target-c2], b)
+
+    init dp[t] to inf, where t is from 0 to amount
+    for each t
+        loop thru all coins
+            dpt[t] = min(1 + dp[t-c], dp[t])
+
+    """
     dp = (amount+1)*[float('inf')]
     dp[0] = 0
     for t in range(1, amount+1):  # we used 2 before, but we can start from 1
@@ -21,7 +30,103 @@ def coin_change(coins, amount):
     print(dp)
     return dp[-1]
 
+def coin_change_dfs(coins, amount):
+    def dfs(sum):
+        if sum == amount:
+            return 0
+        if sum > amount:
+            return float('inf')
+        res = float('inf')
+        for c in coins:
+            ret = dfs(sum+c)
+            if ret != float('inf'):
+                res = min(res, ret+1)
+
+        return res
+    
+    return dfs(0)
+
+def coin_change_dfs_mine(coins, amount):
+    # my code passes res (list) as the argument
+    # so no need to set res=float('inf') in each call
+    def dfs(sum, res):
+        if sum == amount:
+            return 0
+        if sum > amount:
+            return -1  #float('inf')
+        for c in coins:
+            ret = dfs(sum+c, res)
+            if ret != -1: #float('inf'):
+                res[0] = ret+1   # here don't use min()
+
+        return res[0]
+    
+    res = [-1] #[float('inf')]
+    return dfs(0, res)
+
+def coin_change_dfs_mine_memo(coins, amount):
+    # my code passes res (list) as the argument
+    # so no need to set res=float('inf') in each call
+    # here memo saves the min value of each dfs return
+    # which means the minimum coins it needs to reach the amount
+    # e.g. sum==0, memo[sum]=3, means it needs minimum 3 coins (1,2,5) to get 11
+    def dfs(sum, res, memo):
+        if sum == amount:
+            # this means it needs 0 coin to reach amount since sum==amount
+            return 0
+        if sum > amount:
+            return -1  #float('inf')
+        if memo[sum] != -1:
+            return memo[sum]
+
+        for c in coins:
+            ret = dfs(sum+c, res, memo)
+            if ret != -1: #float('inf'):
+                # for current coin c, it needs one more coin + the return of dfs(sum+c)
+                # that's why it's ret+1
+                res[0] = ret + 1   
+            print(f"c={c}, memo={memo}")
+
+        memo[sum] = res[0]
+        return res[0]
+    
+    res = [-1] 
+    memo = [-1]*(amount+1)
+    ret = dfs(0, res, memo)
+    return ret
+
+def min_coins(coins, amount, sum, memo):
+  if sum == amount:
+    return 0
+
+  if sum > amount:
+    return inf
+
+  if (memo[sum] != -1):
+    return memo[sum]
+
+  ans = inf
+  for coin in coins:
+    result = min_coins(coins, amount, sum + coin, memo)
+    if result == inf:
+      continue
+    ans = min(ans, result + 1)
+  
+  memo[sum] = ans
+  print(memo)
+  return ans
+
+def coin_change_algo(coins: List[int], amount: int) -> int:
+  memo = [-1] * (amount + 1)
+  result = min_coins(coins, amount, 0, memo)
+  return result if result != inf else -1
+
 coins = [1,2,5]
 amount = 11
-ret = coin_change(coins, 11)
+# coins = [2]
+# amount = 3
+# ret = coin_change(coins, 11)
+# ret = coin_change_dfs_mine_memo(coins, amount)
+ret = coin_change_dfs_mine_memo(coins, amount)
 print(ret)
+
