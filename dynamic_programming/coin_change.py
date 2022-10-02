@@ -1,3 +1,6 @@
+# given coins of different values and an amount, find the minimum number of coins to make up the amount
+# [1,2,5] --> 11
+# solution: 3  (1,5,5)
 from typing import List
 from math import inf
 
@@ -121,6 +124,28 @@ def coin_change_algo(coins: List[int], amount: int) -> int:
   result = min_coins(coins, amount, 0, memo)
   return result if result != inf else -1
 
+# the following is for get all coin combinations to reach the amount
+def coin_comb(coins, amount):
+    def dfs(start_index, path, res, remaining):
+        if remaining == 0:
+            res.append(path[:])
+            return
+        for i in range(start_index, len(coins)):
+            coin = coins[i]
+            if remaining < coin:
+                continue
+            path.append(coin)
+            # to remove dup, here must call dfs(i), not dfs(start_index)
+            dfs(i, path, res, remaining - coin)
+            path.pop()
+    res = []
+    path = []
+    dfs(0, path, res, amount)
+    return res 
+
+
+
+
 coins = [1,2,5]
 amount = 11
 # coins = [2]
@@ -129,4 +154,10 @@ amount = 11
 # ret = coin_change_dfs_mine_memo(coins, amount)
 ret = coin_change_dfs_mine_memo(coins, amount)
 print(ret)
+ret = coin_comb(coins, amount)
+print(len(ret))
+all_lens = [len(r) for r in ret]
+print(min(all_lens))
+print(ret)
+print([r for r in ret if len(r) == min(all_lens)])
 
