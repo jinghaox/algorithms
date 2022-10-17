@@ -18,7 +18,25 @@ def generate_parenthesis(n):
     backtrack(0,0)
     return res
 
-ret = generate_parenthesis(3)
+def generate_parenthesis_mock(n):
+    res = []
+    path = []
+    def backtrack(i, left_count, right_count):
+        if i == n*2:  # here it should be n*2, and we actually don't need this extra arg i, see above
+            res.append(''.join(path[:]))
+            return
+        if left_count < n:
+            path.append('(')
+            backtrack((i+1), left_count+1, right_count)
+            path.pop()
+        if left_count > right_count:
+            path.append(')')
+            backtrack((i+1), left_count, right_count+1)
+            path.pop()
+    backtrack(0, 0, 0)
+    return res
+        
+ret = generate_parenthesis_mock(3)
 print(ret)
 
 
