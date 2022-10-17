@@ -28,15 +28,20 @@ def level_order_traversal(root):
     q = deque()
     q.append(root)
     while len(q) > 0:
-        n = len(q)
+        n = len(q)   
+        # since q gets update later, so at this moment, we need to remember how many elements we want to iterate
+        # for elements later that that, we don't check them in this level, but in next level
         level = []
         for _ in range(n):
             node = q.popleft()
             level.append(node.val)
-            if node.left:
-                q.append(node.left)
-            if node.right:
-                q.append(node.right)
+            for child in (node.left, node.right):
+                if child is not None:
+                    q.append(child)
+            # if node.left:
+            #     q.append(node.left)
+            # if node.right:
+            #     q.append(node.right)
         res.append(level)
     return res 
 
@@ -238,6 +243,19 @@ def right_side_view_alternate(root):
             if node.left: q.append(node.left)
             if node.right: q.append(node.right)
     return res
+
+    # algo monster's soluiton is 'add right child first, then left'
+    # res = []
+    # queue = deque([root]) # at least one element in the queue to kick start bfs
+    # while len(queue) > 0: # as long as there is element in the queue
+    #     n = len(queue) # number of nodes in current level
+    #     res.append(queue[0].val) # only append the first node we encounter since it's the rightmost
+    #     for _ in range(n): # dequeue each node in the current level
+    #         node = queue.popleft()
+    #         for child in [node.right, node.left]: # add right child first so it'll pop out of the queue first
+    #             if child is not None:
+    #                 queue.append(child)
+    # return res
 
 def left_side_view(root):
     res = []
