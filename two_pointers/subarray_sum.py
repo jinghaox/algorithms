@@ -27,8 +27,10 @@ def subarray_sum(arr, target):
             # e.g. 3 1 2 5 1, we got prefix_sum
             #        1   3   5
             # so the subarray is actually [0:1], [1:3], [3:5]
+            print(prefix_sum)
             return [prefix_sum[complement], i+1]
         else:
+            print(prefix_sum)
             prefix_sum[cur_sum] = i + 1
 
 def subarray_sum_total_mine(arr, target):
@@ -119,8 +121,10 @@ def subarray_sum_divisible(nums: List[int], k: int) -> int:
     return count
     
 
-# arr = [1,3,-3,8,5,7]
-# target = 5
+arr = [1,3,-3,8,5,7]
+target = 5
+ret = subarray_sum(arr, target)
+print(ret)
 # arr = [1, -20, -3, 30, 5, 4, 1, -3, 2]
 # target = 7
 # arr = [1, 1, 1]
@@ -136,14 +140,14 @@ def subarray_sum_divisible(nums: List[int], k: int) -> int:
 # ret = subarray_sum_total(arr, target)
 # print(ret)
 
-# # nums = [3,1,2,5,1]
-# # k = 3
-nums = [0, 37, 0, 7, 9, 4, 101]
-k = 18
-# nums = [4, 5, 0, -2, -3, 1] 
-# k = 5 
-ret = subarray_sum_divisible(nums, k)
-print(ret)
+# # # nums = [3,1,2,5,1]
+# # # k = 3
+# nums = [0, 37, 0, 7, 9, 4, 101]
+# k = 18
+# # nums = [4, 5, 0, -2, -3, 1] 
+# # k = 5 
+# ret = subarray_sum_divisible(nums, k)
+# print(ret)
 
 
 # # nums = [3,1,2,5,1]
